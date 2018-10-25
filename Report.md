@@ -55,7 +55,7 @@ We use fully connected layers for both Actor and Critic network in pytorch 0.4.
      linearc3[label="linear"];
  }
 '/> -->
-![Network Architecture](images/architecture.png)
+<img src="images/architecture.png" height="500">
 
 # Hyper parameters
 
