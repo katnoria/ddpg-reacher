@@ -22,7 +22,7 @@ The actor is trained by using actor to generate actions for a state and maximisi
 
 We use fully connected layers for both Actor and Critic network in pytorch 0.4.
 
-<img src='https://g.gravizo.com/svg?
+<!-- <img src='https://g.gravizo.com/svg?
  digraph G {     
     subgraph cluster_actor {
     linear1 -> batchnorm1 -> relu1;
@@ -54,7 +54,8 @@ We use fully connected layers for both Actor and Critic network in pytorch 0.4.
      reluc2[label="relu"];
      linearc3[label="linear"];
  }
-'/>
+'/> -->
+![Network Architecture](images/architecture.png)
 
 # Hyper parameters
 
