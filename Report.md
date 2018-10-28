@@ -1,21 +1,28 @@
 [//]: # (Image References)
 
-[image1]: images/single_agent_avg_score_sm.png "single agent score"
-[image2]: images/multi_agent_avg_score_sm.png "single agent score"
+[image1]: data/images/single_agent_avg_score_sm.png "single agent score"
+[image2]: data/images/multi_agent_avg_score_sm.png "single agent score"
 
 # Reacher
 
 The Reacher environment requires the agent to learn from high dimensional state space and perform actions in continuous action space. 
 
-The algorithm such as DQN can solve problems with high dimensional state space but only work on discrete and low-dimensional action spaces. Where as the algorithm such as REINFORCE can learn the policy to map state into actions but they are sample inefficient, noisy because we are sampling a trajectory (or a few trajectories) which may not truly represent the policy and could prematurely converge to local optima. 
+The algorithm such as DQN can solve problems with high dimensional state space but only work on discrete and low-dimensional action spaces. The policy based methods such as REINFORCE can learn the policy to map state into actions but they are sample inefficient, noisy because we are sampling a trajectory (or a few trajectories) which may not truly represent the policy and could prematurely converge to local optima. 
 
 The solution used in this repo makes use of actor-critic approach proposed by Lillicrap et al in deep deterministic policy gradient [paper](https://arxiv.org/abs/1509.02971).
 
-The actor network takes state as input and returns the action whereas critic network takes state and action as input and returns the value. 
+The actor network takes state as input and returns the action whereas the critic network takes state and action as input and returns the value. 
 
-The critic in this case is DQN with fixed target network and replay buffer and it is trained by sampling experiences from the replay buffer. The sampled experiences are used to calculate Q estimate and targets and network is trained to minimise the mean squared error between target and estimate.
+The critic in this case is a DQN with local and fixed target networks and replay buffer. The local network is trained by sampling experiences from replay buffer and minimising the loss function.
 
-The actor is trained by using actor to generate actions for a state and maximising the value returned by critic for that state, action pair.
+<img src="data/images/critic_loss_anno.png" width="600">
+
+<img src="data/images/critic_target_av.png" width="600">
+
+
+The actor is updated using sampled policy gradient.
+
+<img src="data/images/actor_loss_anno.png" width="600">
 
 
 # Network Architecture
@@ -61,7 +68,6 @@ We use fully connected layers for both Actor and Critic network in pytorch 0.4.
 
 I tried several hyperparameters in order to solve the environment along with the ones specified by DDPG paper. In the end, the following worked the best.
 
-## Single Agent
 |Parameter|Value|Description|
 |---------|-----|-----------|
 |BUFFER_SIZE|1e5|Replay memory buffer size|
@@ -84,18 +90,23 @@ The single agent environment was solved in **176 episodes**.
 
 ![Single Agent][image1]
 
-Watch the single player play
+Watch the trained agent play by running the following script
+
+```
+python player.py --env ../env/Reacher_Linux1 --model ../checkpoint/single --agent 1
+```
 
 ![Single Player](images/singleplayer.gif)
 
-The multi-agent environment was solved in **100 episodes**.
+## Visdom Plot
 
-![Multi Agent][image2]
+The following screenshot from visdom shows the average score (shown above) and plot of over all score along with critic and actor losses. I found it very useful during the training phase when I was trying out various hyperparams.
 
-Watch the multi player play
+![Visdom](data/images/single_agent_ddpg_solved_sm.png)
 
-![Multi Player](images/multiplayer.gif)
+## 20 Agent Environment (Optional)
 
+Multi agent environment training is currently in progress and I think the environment will be solved in next 24 hours. I will update this page with a link to multi agent report and the repository with results and model checkpoints.
 
 # Future Work
 
@@ -105,6 +116,6 @@ Some people were able to solve the environment in relatively fewer number of tra
 * increase the learning rate and introduce weight decay (currently set to 0) to speed up the learning
 * experiment with scaled rewards (see below)
 
-The [paper](https://arxiv.org/abs/1604.06778) found that DDPG is less stable than batch algorithms such as REINFORC and the performance of policy could degrade significantly during the training phase. In my tests, I found that average score hit a plateau if I continued the training process even after solving the environment. They found that scaling the rewards seem to improve the stability.
+This [paper](https://arxiv.org/abs/1604.06778) found that DDPG is less stable than batch algorithms such as REINFORCE and the performance of policy could degrade significantly during the training phase. In my tests, I found that average score hit a plateau if I continued the training process even after solving the environment. The paper suggests that scaling the rewards could improve the training stability.
 
-While working on DDPG solution, there were a lot of moving parts such as network architecture, hyperparameters and it took be a long time, along with suggestions on the forum, to discover the combination that could solve the environment. Proximal policy optimization (PPO) has shown to achieve [state-of-the-art](https://blog.openai.com/openai-baselines-ppo/) results with very little hyperparamter tuning, greater sample efficiency and keeping the policy deviation under check (by forcing the ratio of old and new policy with in a small interval). 
+While working on DDPG solution, there were a lot of moving parts such as network architecture, hyperparameters and it took be a long time, along with suggestions on the forum, to discover the combination that could solve the environment. Proximal policy optimization (PPO) has shown to achieve [state-of-the-art](https://blog.openai.com/openai-baselines-ppo/) results with very little hyperparamter tuning, greater sample efficiency while keeping the policy deviation under check (by forcing the ratio of old and new policy with in a small interval). 

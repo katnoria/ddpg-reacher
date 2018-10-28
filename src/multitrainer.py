@@ -129,7 +129,7 @@ def main():
     agent = DDPGMultiAgent(state_shape, action_size, num_agents, writer=writer, random_seed=10, dirname=dirname, print_every=100, model_path=args.model)
     scores = ddpg(env, brain_name, num_agents, agent, writer, n_episodes=args.num_episodes, max_t=args.max_t, stop_on_solve=args.stop_on_solve)
     # save all scores
-    save_to_txt('\n'.join(scores), '{}/scores_multi_full.txt'.format(dirname))
+    save_to_txt('\n'.join([score.tolist() for score in scores]), '{}/scores_multi_full.txt'.format(dirname))
 
 
 if __name__ == "__main__":    

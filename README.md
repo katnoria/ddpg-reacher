@@ -11,7 +11,7 @@ In this project, we are challenged to solve [Reacher](https://github.com/Unity-T
 
 ![Trained Agent][image1]
 
-In this environment, a double-jointed arm can move to target locations. A reward of +0.1 is provided for each step that the agent's hand is in the goal location. Thus, the goal of your agent is to maintain its position at the target location for as many time steps as possible.
+The environment, a double-jointed arm can move to target locations. A reward of +0.1 is provided for each step that the agent's hand is in the goal location. Thus, the goal of your agent is to maintain its position at the target location for as many time steps as possible.
 
 The observation space consists of 33 variables corresponding to position, rotation, velocity, and angular velocities of the arm. Each action is a vector with four numbers, corresponding to torque applicable to two joints. Every entry in the action vector should be a number between -1 and 1.
 
@@ -23,6 +23,8 @@ We use [deep deterministic policy gradients](https://arxiv.org/abs/1509.02971) (
 
 The task is episodic, and in order to solve the environment,  your agent must get an average score of +30 over 100 consecutive episodes.
 
+[Click here for solution](Report.md)
+
 #### Option 2: Solve the Second Version
 
 The barrier for solving the second version of the environment is slightly different, to take into account the presence of many agents.  In particular, your agents must get an average score of +30 (over 100 consecutive episodes, and over all agents).  Specifically,
@@ -30,6 +32,7 @@ The barrier for solving the second version of the environment is slightly differ
 - This yields an **average score** for each episode (where the average is over all 20 agents).
 
 The environment is considered solved, when the average (over 100 episodes) of those average scores is at least +30. 
+
 
 ### Getting Started
 
@@ -129,8 +132,33 @@ python multitrainer.py --num_episodes 250 --max_t 20
 
 Once you start training the agent, the realtime plots can be viewed at http://127.0.0.1:8097
 
-Single Agent
-![image](images/p2_ddpg.gif)
+#### Single Agent Training
 
-Multi Agent
-![image](images/multi_agent_monitor.png)
+![image](data/images/p2_ddpg.gif)
+
+#### Multi Agent Training
+![image](data/images/multi_agent_monitor.png)
+
+
+### Play
+
+To use uploaded model checkpoints, use player.py
+
+```
+conda activate myenv
+cd src
+python player.py --help
+usage: player.py [-h] [--env ENV] [--model MODEL] [--agent AGENT]
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --env ENV      Full path of environment (default: None)
+  --model MODEL  Model checkpoint path, use if you wish to continue training
+                 from a checkpoint (default: None)
+  --agent AGENT  Number of agents. Specify either 1 or 20 (default: None)
+```
+
+For example, to run mac environment with model checkpoints
+```
+python player.py --env env/Reacher20.app --model checkpoint/single --agent 1
+```
