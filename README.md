@@ -21,13 +21,13 @@ We use [deep deterministic policy gradients](https://arxiv.org/abs/1509.02971) (
 
 #### Option 1: Solve the First Version
 
-The task is episodic, and in order to solve the environment,  your agent must get an average score of +30 over 100 consecutive episodes.
+The task is episodic, and in order to solve the environment,  the agent must get an average score of +30 over 100 consecutive episodes.
 
 [Click here for solution](Report.md)
 
 #### Option 2: Solve the Second Version
 
-The barrier for solving the second version of the environment is slightly different, to take into account the presence of many agents.  In particular, your agents must get an average score of +30 (over 100 consecutive episodes, and over all agents).  Specifically,
+The barrier for solving the second version of the environment is slightly different, to take into account the presence of many agents.  In particular, the agents must get an average score of +30 (over 100 consecutive episodes, and over all agents).  Specifically,
 - After each episode, we add up the rewards that each agent received (without discounting), to get a score for each agent.  This yields 20 (potentially different) scores.  We then take the average of these 20 scores. 
 - This yields an **average score** for each episode (where the average is over all 20 agents).
 
